@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="edu.cqupt.d2.dao.OCR_PICMapper">
+
+    <select id="selectByPic_ID" resultType="edu.cqupt.d2.domain.OCR_PIC" parameterType="double">
+        select * from OCR_PIC where Pic_ID = #{uid}
+    </select>
+
+    <insert id="insertPic" parameterType="edu.cqupt.d2.domain.OCR_PIC">
+        insert into OCR_PIC(Pic_Data,Pic_Type) values(#{Pic_Data},#{Pic_Type})
+    </insert>
+
+
+
+</mapper>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="edu.cqupt.d2.dao.Comment2PostMapper">
+
+    <!-- 定义resultMap-->
+    <resultMap id="allMap" type="edu.cqupt.d2.domain.Comment2Post">
+        <id column="C2P_No" property="C2P_No"></id>
+        <result column="Post_No" property="Post_No"></result>
+        <result column="C2P_UID" property="C2P_UID"></result>
+        <result column="C2P_Name" property="C2P_Name"></result>
+        <result column="C2P_Content" property="C2P_Content"></result>
+        <result column="C2P_Time" property="C2P_Time"></result>
+        <!-- 配置映射 -->
+        <collection property="comments" ofType="edu.cqupt.d2.domain.Reply2Comment">
+            <id column="R2C_No" property="R2C_No"></id>
+            <result column="R2C_Comment_No" property="R2C_Comment_No"></result>
+            <result column="Be_R2C_UID" property="Be_R2C_UID"></result>
+            <result column="Be_R2C_Name" property="Be_R2C_Name"></result>
+            <result column="R2C_UID" property="R2C_UID"></result>
+            <result column="R2C_Name" property="R2C_Name"></result>
+            <result column="R2C_Content" property="R2C_Content"></result>
+            <result column="R2C_Time" property="R2C_Time"></result>
+        </collection>
+    </resultMap>
+
+    <select id="selectByPost_No" resultType="edu.cqupt.d2.domain.Comment2Post" parameterType="double">
+        select * from Comment2Post where Post_No = #{uid}
+    </select>
+
+    <delete id="deleteByC2P_No" parameterType="double">
+    delete from Comment2Post where C2P_No = #{ano}
+    </delete>
+
+    <insert id="insertComment" parameterType="edu.cqupt.d2.domain.Comment2Post">
+        INSERT INTO Comment2Post(Post_No,C2P_UID,C2P_Name,C2P_Content) VALUES
+        (#{Post_No},#{C2P_UID},#{C2P_Name},#{C2P_Content});
+    </insert>
+
+    <select id="selectAllByComment_No" resultMap="allMap" parameterType="double">
+        SELECT * FROM Comment2Post c2p
+        LEFT OUTER JOIN Reply2Comment r2c
+        ON c2p.`C2P_No`=r2c.`R2C_Comment_No`
+        WHERE c2p.`C2P_No`=#{no};
+    </select>
+
+    <!-- 开始整活 -->
+    <delete id="delete2" parameterType="java.util.List">
+        DELETE FROM Reply2Comment WHERE R2C_No IN(
+        <foreach collection="list" item="item" separator=",">
+            #{item}
+        </foreach>
+        );
+    </delete>
+    <delete id="delete1" parameterType="double">
+        DELETE FROM Comment2Post WHERE C2P_No = #{no};
+    </delete>
+    <insert id="insert2" parameterType="edu.cqupt.d2.domain.Reply2Comment">
+        INSERT INTO BanReply2Comment VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.R2C_No},#{item.R2C_Comment_No},#{item.Be_R2C_UID},#{item.Be_R2C_Name},#{item.R2C_UID},#{item.R2C_Name},#{item.R2C_Content},#{item.R2C_Time})
+        </foreach>
+    </insert>
+    <insert id="insert1" parameterType="edu.cqupt.d2.domain.Comment2Post">
+        INSERT INTO BanComment2Post VALUES(#{C2P_No},#{Post_No},#{C2P_UID},#{C2P_Name},#{C2P_Content},#{C2P_Time})
+    </insert>
+
+    <!-- 反向整活 -->
+    <select id="RfindAll" resultMap="allMap" parameterType="double">
+        SELECT * FROM BanComment2Post c2p
+        LEFT OUTER JOIN BanReply2Comment r2c
+        ON c2p.`C2P_No`=r2c.`R2C_Comment_No`
+        WHERE c2p.`C2P_No`=#{no};
+    </select>
+    <delete id="Rdelete2" parameterType="java.util.List">
+        DELETE FROM BanReply2Comment WHERE R2C_No IN(
+        <foreach collection="list" item="item" separator=",">
+            #{item}
+        </foreach>
+        );
+    </delete>
+    <delete id="Rdelete1" parameterType="double">
+        DELETE FROM BanComment2Post WHERE C2P_No = #{no};
+    </delete>
+    <insert id="Rinsert2" parameterType="edu.cqupt.d2.domain.Reply2Comment">
+        INSERT INTO Reply2Comment VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.R2C_No},#{item.R2C_Comment_No},#{item.Be_R2C_UID},#{item.Be_R2C_Name},#{item.R2C_UID},#{item.R2C_Name},#{item.R2C_Content},#{item.R2C_Time})
+        </foreach>
+    </insert>
+    <insert id="Rinsert1" parameterType="edu.cqupt.d2.domain.Comment2Post">
+        INSERT INTO Comment2Post VALUES(#{C2P_No},#{Post_No},#{C2P_UID},#{C2P_Name},#{C2P_Content},#{C2P_Time})
+    </insert>
+
+</mapper>

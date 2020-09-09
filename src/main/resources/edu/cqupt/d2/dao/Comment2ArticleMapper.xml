@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="edu.cqupt.d2.dao.Comment2ArticleMapper">
+    <select id="selectByArticle_No" resultType="edu.cqupt.d2.domain.Comment2Article" parameterType="double">
+        select * from Comment2Article where Article_No = #{ano}
+    </select>
+
+    <delete id="deleteByC2A_No" parameterType="double">
+    delete from Comment2Article where C2A_No = #{ano}
+    </delete>
+
+    <insert id="newInsertComment" parameterType="edu.cqupt.d2.domain.Comment2Article">
+        INSERT INTO Comment2Article(Article_No,C2A_ID,C2A_Name,C2A_Content) VALUES
+        (#{Article_No},#{C2A_ID},#{C2A_Name},#{C2A_Content});
+    </insert>
+
+    <select id="selectByComment_No" resultType="edu.cqupt.d2.domain.Comment2Article" parameterType="double">
+        select * from Comment2Article where C2A_No = #{no}
+    </select>
+
+    <delete id="RdeleteByC2A_No" parameterType="double">
+    delete from BanComment2Article where C2A_No = #{ano}
+    </delete>
+
+
+    <!-- 开始整活 -->
+    <select id="selectone" resultType="edu.cqupt.d2.domain.Comment2Article" parameterType="double">
+        select * from Comment2Article where C2A_No = #{no}
+    </select>
+    <delete id="deleteComment" parameterType="double">
+        DELETE FROM Comment2Article WHERE C2A_No = #{no};
+    </delete>
+    <insert id="insertComment" parameterType="edu.cqupt.d2.domain.Comment2Article">
+        INSERT INTO BanComment2Article VALUES
+        (#{C2A_No},#{Article_No},#{C2A_ID},#{C2A_Name},#{C2A_Content},#{C2A_ime})
+    </insert>
+
+    <!-- 反向整活 -->
+    <select id="Rselectone" resultType="edu.cqupt.d2.domain.Comment2Article" parameterType="double">
+        select * from BanComment2Article where C2A_No = #{no}
+    </select>
+    <delete id="RdeleteComment" parameterType="double">
+        DELETE FROM BanComment2Article WHERE C2A_No = #{no};
+    </delete>
+    <insert id="RinsertComment" parameterType="edu.cqupt.d2.domain.Comment2Article">
+        INSERT INTO Comment2Article VALUES
+        (#{C2A_No},#{Article_No},#{C2A_ID},#{C2A_Name},#{C2A_Content},#{C2A_ime})
+        </insert>
+
+</mapper>

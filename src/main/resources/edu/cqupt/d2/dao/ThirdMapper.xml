@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="edu.cqupt.d2.dao.ThirdMapper">
+
+
+    <select id="selectByPrimaryKey" resultType="edu.cqupt.d2.domain.Third" parameterType="String">
+        select * from Third_login where Third_Info_uid = #{tid}
+    </select>
+
+    <select id="selectByUID" resultType="edu.cqupt.d2.domain.Third" parameterType="String">
+        select * from Third_login where uid = #{uid}
+    </select>
+
+    <insert id="InsertThird"  parameterType="edu.cqupt.d2.domain.Third">
+         insert into Third_login values(#{Third_Info_Type},#{Third_Info_uid},#{UID},#{Third_Info_key})
+    </insert>
+
+    <update id="updateUserThird" >
+        update User set User_Third_Num=#{param1} where UID=#{param2}
+    </update>
+
+</mapper>

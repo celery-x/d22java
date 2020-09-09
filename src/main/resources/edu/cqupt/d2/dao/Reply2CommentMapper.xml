@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="edu.cqupt.d2.dao.Reply2CommentMapper">
+
+    <select id="selectByCommentNo" resultType="edu.cqupt.d2.domain.Reply2Comment" parameterType="double">
+        select * from Reply2Comment where R2C_Comment_No = #{no}
+    </select>
+
+    <insert id="newInsertComment" parameterType="edu.cqupt.d2.domain.Reply2Comment">
+        INSERT INTO Reply2Comment(R2C_Comment_No,Be_R2C_UID,Be_R2C_Name,R2C_UID,R2C_Name,R2C_Content) VALUES
+        (#{R2C_Comment_No},#{Be_R2C_UID},#{Be_R2C_Name},#{R2C_UID},#{R2C_Name},#{R2C_Content});
+    </insert>
+
+
+
+
+    <!-- 开始整活 -->
+    <select id="selectone" resultType="edu.cqupt.d2.domain.Reply2Comment" parameterType="double">
+        select * from Reply2Comment where R2C_No = #{no}
+    </select>
+    <delete id="deleteComment" parameterType="double">
+        DELETE FROM Reply2Comment WHERE R2C_No = #{no};
+    </delete>
+    <insert id="insertComment" parameterType="edu.cqupt.d2.domain.Comment2Post">
+        INSERT INTO BanReply2Comment VALUES
+        (#{R2C_No},#{R2C_Comment_No},#{Be_R2C_UID},#{Be_R2C_Name},#{R2C_UID},#{R2C_Name},#{R2C_Content},#{R2C_Time})
+    </insert>
+
+    <!-- 反向整活 -->
+    <select id="Rselectone" resultType="edu.cqupt.d2.domain.Reply2Comment" parameterType="double">
+        select * from BanReply2Comment where R2C_No = #{no}
+    </select>
+    <delete id="RdeleteComment" parameterType="double">
+        DELETE FROM BanReply2Comment WHERE R2C_No = #{no};
+    </delete>
+    <insert id="RinsertComment" parameterType="edu.cqupt.d2.domain.Comment2Post">
+        INSERT INTO Reply2Comment VALUES
+        (#{R2C_No},#{R2C_Comment_No},#{Be_R2C_UID},#{Be_R2C_Name},#{R2C_UID},#{R2C_Name},#{R2C_Content},#{R2C_Time})
+    </insert>
+
+</mapper>

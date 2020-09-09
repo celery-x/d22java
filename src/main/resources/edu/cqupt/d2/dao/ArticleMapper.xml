@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="edu.cqupt.d2.dao.ArticleMapper">
+
+    <!-- 定义resultMap-->
+    <resultMap id="allMap" type="edu.cqupt.d2.domain.Article">
+        <id property="Article_No" column="Article_No"></id>
+        <result property="User_Name" column="User_Name"></result>
+        <result property="UID" column="UID"></result>
+        <result property="Article_Content" column="Article_Content"></result>
+        <result property="Article_Headline" column="Article_Headline"></result>
+        <result property="Article_Time" column="Article_Time"></result>
+        <!-- 配置user对象中accounts集合的映射 -->
+        <collection property="comments" ofType="edu.cqupt.d2.domain.Comment2Article">
+            <id column="C2A_No" property="C2A_No"></id>
+            <result column="Article_No" property="Article_No"></result>
+            <result column="C2A_ID" property="C2A_ID"></result>
+            <result column="C2A_Name" property="C2A_Name"></result>
+            <result column="C2A_Content" property="C2A_Content"></result>
+            <result column="C2A_ime" property="C2A_ime"></result>
+        </collection>
+    </resultMap>
+
+    <resultMap id="comentsMap" type="edu.cqupt.d2.domain.Comment2Article">
+        <id column="C2A_No" property="C2A_No"></id>
+        <result column="Article_No" property="Article_No"></result>
+        <result column="C2A_ID" property="C2A_ID"></result>
+        <result column="C2A_Name" property="C2A_Name"></result>
+        <result column="C2A_Content" property="C2A_Content"></result>
+        <result column="C2A_ime" property="C2A_ime"></result>
+    </resultMap>
+
+
+    <select id="selectByPrimaryKey" resultType="edu.cqupt.d2.domain.Article" parameterType="double">
+        select * from Article where Article_No = #{no}
+    </select>
+
+
+    <select id="selectAllByArticle_No" resultMap="allMap" parameterType="double">
+        SELECT * FROM Article a LEFT OUTER JOIN Comment2Article c2a ON a.`Article_No`=c2a.`Article_No` WHERE a.Article_No=#{no};
+    </select>
+
+    <select id="selectLimitedArticle" resultMap="allMap">
+	    SELECT * FROM Article
+	    ORDER BY Article_Time DESC
+        LIMIT #{param1},#{param2};
+    </select>
+
+    <select id="selectArticleCount" resultType="int">
+	    SELECT count(*) FROM Article;
+    </select>
+
+    <select id="selectLastId" resultType="int">
+	    SELECT last_insert_id;
+    </select>
+
+    <insert id="insertArticle" parameterType="edu.cqupt.d2.domain.Article">
+        INSERT INTO Article(User_Name,UID,Article_Content,Article_Headline,Article_Time) VALUES
+        (#{User_Name},#{UID},#{Article_Content},#{Article_Headline},#{Article_Time});
+    </insert>
+
+    <update id="updatePath">
+        UPDATE Article
+        SET Article_Content=#{param1}
+        WHERE Article_No=#{param2};
+    </update>
+
+    <!-- 开始整活 -->
+    <delete id="deleteComments" parameterType="java.util.List">
+        DELETE FROM Comment2Article WHERE C2A_No IN(
+        <foreach collection="list" item="item" separator=",">
+            #{item}
+        </foreach>
+        );
+    </delete>
+    <delete id="deleteArticle" parameterType="double">
+        DELETE FROM Article WHERE Article_No = #{no};
+    </delete>
+    <insert id="insert2BanC2A" parameterType="edu.cqupt.d2.domain.Comment2Article">
+        INSERT INTO BanComment2Article VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.C2A_No},#{item.Article_No},#{item.C2A_ID},#{item.C2A_Name},#{item.C2A_Content},#{item.C2A_ime})
+        </foreach>
+    </insert>
+    <insert id="insert2BanArticle" parameterType="edu.cqupt.d2.domain.Article">
+        INSERT INTO BanArticle VALUES(#{Article_No},#{User_Name},#{UID},#{Article_Content},#{Article_Headline},#{Article_Time})
+
+    </insert>
+
+    <!-- 反向整活 -->
+    <select id="RselectAllByArticle_No" resultMap="allMap" parameterType="double">
+        SELECT * FROM BanArticle a LEFT OUTER JOIN BanComment2Article c2a ON a.`Article_No`=c2a.`Article_No` WHERE a.Article_No=#{no};
+    </select>
+
+    <delete id="RdeleteComments" parameterType="java.util.List">
+        DELETE FROM BanComment2Article WHERE C2A_No IN(
+        <foreach collection="list" item="item" separator=",">
+            #{item}
+        </foreach>
+        );
+    </delete>
+    <delete id="RdeleteArticle" parameterType="double">
+        DELETE FROM BanArticle WHERE Article_No = #{no};
+    </delete>
+    <insert id="Rinsert2BanC2A" parameterType="edu.cqupt.d2.domain.Comment2Article">
+        INSERT INTO Comment2Article VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.C2A_No},#{item.Article_No},#{item.C2A_ID},#{item.C2A_Name},#{item.C2A_Content},#{item.C2A_ime})
+        </foreach>
+    </insert>
+    <insert id="Rinsert2BanArticle" parameterType="edu.cqupt.d2.domain.Article">
+        INSERT INTO Article VALUES(#{Article_No},#{User_Name},#{UID},#{Article_Content},#{Article_Headline},#{Article_Time})
+
+    </insert>
+</mapper>
