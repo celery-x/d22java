@@ -8,4 +8,6 @@ public interface UserService {
     public void saveUser(User user);
 
     public void alterUser(User user);
+
+    public void setHead(String uid,String path);
 }

@@ -9,6 +9,7 @@ public class User implements Serializable {
     private String  user_doctor_no;
     private String  user_name;
     private String  user_third_num;
+    private String  Head_Data;
 
 
     public String getUid() {
@@ -59,6 +60,13 @@ public class User implements Serializable {
         this.user_third_num = user_third_num;
     }
 
+    public String getHead_Data() {
+        return Head_Data;
+    }
+
+    public void setHead_Data(String head_Data) {
+        Head_Data = head_Data;
+    }
 
 
     public User() {
@@ -77,6 +85,7 @@ public class User implements Serializable {
     }
 
 
+
     @Override
     public String toString() {
         return "User{" +
@@ -84,8 +93,9 @@ public class User implements Serializable {
                 ", user_phone='" + user_phone + '\'' +
                 ", user_password='" + user_password + '\'' +
                 ", user_doctor_no='" + user_doctor_no + '\'' +
-                ", user_patient_no='" + user_name + '\'' +
+                ", user_name='" + user_name + '\'' +
                 ", user_third_num='" + user_third_num + '\'' +
+                ", Head_Data='" + Head_Data + '\'' +
                 '}';
     }
 }

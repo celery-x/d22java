@@ -28,6 +28,12 @@ public class UserServiceImpl implements UserService {
         userMapper.updateUser(user);
     }
 
+    @Override
+    public void setHead(String uid, String path) {
+        userMapper.updateHeadPath(path,uid);
+    }
+
+
     public UserMapper getUserMapper() {
         return userMapper;
     }

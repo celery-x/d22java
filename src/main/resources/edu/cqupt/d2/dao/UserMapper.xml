@@ -15,4 +15,8 @@
          UPDATE USER SET User_Password=#{user_password},User_Phone=#{user_phone},User_Name=#{user_name} WHERE UID=#{uid};
     </update>
 
+    <update id="updateHeadPath" >
+        UPDATE USER SET Head_Data=#{param1} WHERE UID=#{param2};
+    </update>
+
 </mapper>

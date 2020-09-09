@@ -85,4 +85,82 @@
     <delete id="RdeletebanPost" parameterType="double">
         DELETE FROM BanPost WHERE Post_No = #{no};
     </delete>
+
+
+    <!-- 开始整活 -->
+    <delete id="delete3" parameterType="java.util.List">
+        DELETE FROM Reply2Comment WHERE R2C_No IN(
+        <foreach collection="list" item="item" separator=",">
+            #{item}
+        </foreach>
+        );
+    </delete>
+    <delete id="delete2" parameterType="java.util.List">
+        DELETE FROM Comment2Post WHERE C2P_No IN(
+        <foreach collection="list" item="item" separator=",">
+            #{item}
+        </foreach>
+        );
+    </delete>
+    <delete id="delete1" parameterType="double">
+        DELETE FROM Post WHERE Post_No = #{no};
+    </delete>
+    <insert id="insert3" parameterType="edu.cqupt.d2.domain.Reply2Comment">
+        INSERT INTO BanReply2Comment VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.R2C_No},#{item.R2C_Comment_No},#{item.Be_R2C_UID},#{item.Be_R2C_Name},#{item.R2C_UID},#{item.R2C_Name},#{item.R2C_Content},#{item.R2C_Time})
+        </foreach>
+    </insert>
+    <insert id="insert2" parameterType="edu.cqupt.d2.domain.Comment2Post">
+        INSERT INTO BanComment2Post VALUES
+        <foreach collection="list" item="item" separator=",">
+        (#{item.C2P_No},#{item.Post_No},#{item.C2P_UID},#{item.C2P_Name},#{item.C2P_Content},#{item.C2P_Time})
+        </foreach>
+    </insert>
+    <insert id="insert1" parameterType="edu.cqupt.d2.domain.Comment2Post">
+        INSERT INTO BanPost(Post_No,User_Name,UID,Post_Content,Post_Headline,Post_Time)
+        VALUES(#{Post_No},#{User_Name},#{UID},#{Post_Content},#{Post_Headline},#{Post_Time});
+    </insert>
+
+    <!-- 反向整活 -->
+    <delete id="Rdelete3" parameterType="java.util.List">
+        DELETE FROM BanReply2Comment WHERE R2C_No IN(
+        <foreach collection="list" item="item" separator=",">
+            #{item}
+        </foreach>
+        );
+    </delete>
+    <delete id="Rdelete2" parameterType="java.util.List">
+        DELETE FROM BanComment2Post WHERE C2P_No IN(
+        <foreach collection="list" item="item" separator=",">
+            #{item}
+        </foreach>
+        );
+    </delete>
+    <delete id="Rdelete1" parameterType="double">
+        DELETE FROM BanPost WHERE Post_No = #{no};
+    </delete>
+    <insert id="Rinsert3" parameterType="edu.cqupt.d2.domain.Reply2Comment">
+        INSERT INTO Reply2Comment VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.R2C_No},#{item.R2C_Comment_No},#{item.Be_R2C_UID},#{item.Be_R2C_Name},#{item.R2C_UID},#{item.R2C_Name},#{item.R2C_Content},#{item.R2C_Time})
+        </foreach>
+    </insert>
+    <insert id="Rinsert2" parameterType="edu.cqupt.d2.domain.Comment2Post">
+        INSERT INTO Comment2Post VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.C2P_No},#{item.Post_No},#{item.C2P_UID},#{item.C2P_Name},#{item.C2P_Content},#{item.C2P_Time})
+        </foreach>
+    </insert>
+    <insert id="Rinsert1" parameterType="edu.cqupt.d2.domain.Comment2Post">
+        INSERT INTO Post(Post_No,User_Name,UID,Post_Content,Post_Headline,Post_Time)
+        VALUES(#{Post_No},#{User_Name},#{UID},#{Post_Content},#{Post_Headline},#{Post_Time});
+    </insert>
+    <select id="RselectAllByPost_No" resultMap="allMap" parameterType="double">
+        SELECT * FROM BanPost p LEFT OUTER JOIN BanComment2Post c2p
+        ON p.`Post_No`=c2p.`Post_No`
+        LEFT OUTER JOIN BanReply2Comment r2c
+        ON c2p.`C2P_No`=r2c.`R2C_Comment_No`
+        WHERE p.`Post_No`=#{no};
+    </select>
 </mapper>
